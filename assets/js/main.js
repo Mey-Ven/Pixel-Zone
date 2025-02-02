@@ -221,19 +221,22 @@
   /**
    * Form submission handling (merged from form.js)
    */
+  let isSubmitting = false; // Verrou global pour éviter l'envoi multiple
+
   const form = document.querySelector('.php-email-form');
   if (form) {
     form.addEventListener('submit', async function (event) {
       event.preventDefault();
+  
+      if (isSubmitting) return; // Empêche une nouvelle soumission
+      isSubmitting = true; // Active le verrou
   
       const formData = new FormData(form);
       const loading = document.querySelector('.loading');
       const sentMessage = document.querySelector('.sent-message');
       const submitButton = form.querySelector('button[type="submit"]');
   
-      if (submitButton.disabled) return;
-  
-      submitButton.disabled = true;
+      submitButton.disabled = true; // Désactive le bouton dès la soumission
       loading.style.display = 'block';
       sentMessage.style.display = 'none';
   
@@ -254,18 +257,24 @@
           setTimeout(() => {
             console.log('Hiding sent message'); // Débogage
             sentMessage.style.display = 'none'; // Cache le message
-            submitButton.disabled = false;
+            submitButton.disabled = false; // Réactive le bouton
           }, 2000);
         } else {
+          console.error('Error during submission'); // Débogage
           loading.style.display = 'none';
           submitButton.disabled = false;
         }
       } catch (error) {
+        console.error('Submission failed', error); // Débogage
         loading.style.display = 'none';
         submitButton.disabled = false;
+      } finally {
+        isSubmitting = false; // Libère le verrou après l'envoi (succès ou erreur)
       }
+      form.reset();
     });
   }
+  
   
 
 })();
