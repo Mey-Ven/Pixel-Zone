@@ -1,15 +1,10 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "pixelzone/wsgi.py",
-        "use": "@vercel/python"
-      }
-    ],
+
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "pixelzone/wsgi.py"
-      }
+        {
+            "src": "/(.*)",
+            "dest": "server.py"
+        }
     ]
-  }
+}
